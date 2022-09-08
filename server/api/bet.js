@@ -26,13 +26,14 @@ router.get('/getBetInfo', async (req, res, next) => {
 })
 router.get('/joinBet/:user', async (req, res, next) => {
   try {
-    console.log(req.params.user)
     let user = await User.findOne({ where: { name: req.params.user } })
-    if (user.score-= minimumBet < 0) {
+    if (parseInt(user.score)-parseInt(minimumBet) < 0) {
       res.json({error:"Insufficient Funds"})
     } else {
-      user.score = user.score -= minimumBet;
-      pot += minimumBet;
+      user.score = parseInt(user.score) - parseInt(minimumBet);
+      user.save()
+      pot= parseInt(pot) + parseInt(minimumBet);
+      console.log(pot)
        res.json({ message: "Joined" })
     }
    
@@ -52,7 +53,7 @@ router.get('/addUser/:user', async (req, res, next) => {
 })
 router.get('/info/:user', async (req, res, next) => {
   try {
-       let user = await User.findOne({ where: { name: req.params.user } })
+    let user = await User.findOne({ where: { name: req.params.user } })
     res.json({minimumBet, pot, betStarted, score: user.score })
   } catch (err) {
     next(err)
@@ -61,9 +62,20 @@ router.get('/info/:user', async (req, res, next) => {
 router.get('/winBet/:user', async (req, res, next) => {
   try {
     let user = await User.findOne({ where: { name: req.params.user } })
-    user.score = user.score += pot;
+    user.score = parseInt(user.score) + parseInt(pot);
+    user.save()
     betStarted = false;
     minimumBet = 0;
+  } catch (err) {
+    next(err)
+  }
+})
+router.get('/setUser/:user/:amount', async (req, res, next) => {
+  try {
+    let user = await User.findOne({ where: { name: req.params.user } })
+    user.score = req.params.amount;
+    user.save()
+   res.sendStatus(200)
   } catch (err) {
     next(err)
   }

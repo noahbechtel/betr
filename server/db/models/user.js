@@ -9,7 +9,7 @@ const User = db.define('user', {
     allowNull: false
   },
   score: {
-    type: Sequelize.STRING,
+    type: Sequelize.INTEGER,
     defaultValue:1000
   }
 })
