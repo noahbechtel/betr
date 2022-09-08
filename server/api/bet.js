@@ -66,6 +66,7 @@ router.get('/winBet/:user', async (req, res, next) => {
     user.save()
     betStarted = false;
     minimumBet = 0;
+    res.sendStatus(200)
   } catch (err) {
     next(err)
   }
