@@ -9,7 +9,7 @@ const db = new Sequelize(
     logging: false,
     USER: 'wvrkjswybvvpeu',
     PASSWORD: 'dc7ndd43c5aape',
-    
+    dialect:'postgres'
   }
 )
 module.exports = db
